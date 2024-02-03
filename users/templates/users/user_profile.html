@@ -52,6 +52,25 @@
                 text-align: center;
             }
 
+            #profile_photo:before {
+                content: "";
+                /* border: thin solid yellow; */
+                width: 30px;
+                height: 30px;
+                position: absolute;
+                right: 10px;
+                background-image: url("{% static 'default_pic/crown.png' %}");
+                background-position: center;
+                background-size: contain;
+                background-color: white;
+                border-radius: 50%;
+                border: thick solid white;
+            }
+
+            #profile_photo{
+                position: relative;
+            }
+
             #pro-skills .a-skill,
             #perso-skills .a-skill {
                 /* border: thin solid #878787; */
@@ -60,6 +79,7 @@
                 color: #ffffff;
                 margin: 0px;
                 margin-right: 1rem;
+                margin-bottom: 1rem;
             }
 
             #profile_photo{
@@ -70,7 +90,7 @@
                 display: inline-block!important;
             }
             
-            @media (min-width: 768px){
+            @media (min-width: 1200px){
                 #profile_photo{
                     width: 220px;
                     height: 220px;
@@ -78,6 +98,11 @@
                     top: 10rem;
                     right: 16rem;
                 }
+                #profile_photo:before {
+                    right: 20px;
+
+                }
+
             }
         </style>
     </head>
@@ -120,7 +145,7 @@
                         <li><a href="#" data-value="#skills" data-name="Skills">Skills</a></li>
                         <!-- <li><a href="#" data-value="#services" data-name="Services">Services</a></li>
                         <li><a href="#" data-value="#resume" data-name="Resume">Resume</a></li> -->
-                        <!-- <li><a href="#" data-value="#portfolio" data-name="Portfolio">Portfolio</a></li> -->
+                        <li><a href="#" data-value="#portfolio" data-name="Portfolio">Portfolio</a></li>
                         <!-- <li><a href="#" data-value="#blog" data-name="Blog">Blog</a></li>
                         <li><a href="#" data-value="#contact" data-name="Contact">Contact</a></li> -->
                     </ul>
@@ -138,8 +163,8 @@
                     <div class="intro display-table">
                         <div class="display-table-cell">
                             <div>
-                                <!-- <img src="{{ profile.profile_photo.url }}" alt="" id="profile_photo"> -->
-                                <span style="background-image: url('{{ profile.profile_photo.url }}'); background-size: cover;background-position: center;" alt="" id="profile_photo"></span>
+                                <!-- <img src="{# profile.profile_photo.url #}" alt="" id="profile_photo"> -->
+                                <span style="background-image: url('{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'default_pic/cool-hair.webp' %}{% endif %}'); background-size: cover;background-position: center;" alt="" id="profile_photo" title="expert material"></span>
                             </div>
                             <h3 style="margin-top: 3rem;">Hey, My name is</h3>
                             <h1>{{profile.user.get_full_name}}</h1>
@@ -181,7 +206,7 @@
                 <div class="row">
                     <div class="col-lg-5 col-md-6">
                         <div class="about-image">
-                            <img class="img-responsive" src="{{profile.cover.url}}" alt="">
+                            <img class="img-responsive" src="{% if profile.cover %}{{profile.cover.url}}{% else %}{% static 'default_pic/android-swags.jpg' %}{% endif %}" alt="">
                         </div>
                     </div>
                     <div class="col-lg-7 col-md-6">
@@ -336,7 +361,7 @@
             <div class="container">
                 <div class="main-title">
                     <h2>My Skills</h2>
-                    <span>04.</span>
+                    <span>03.</span>
                 </div>
                 <div class="row">
                     <div class="col">
@@ -381,90 +406,32 @@
             <div class="container">
                 <div class="main-title">
                     <h2>My Portfolio</h2>
-                    <span>05.</span>
+                    <span>04.</span>
                 </div>
                 <div class="filter-menu">
                     <ul id="control" class="list-filter list-unstyled">
                         <li class="active" data-filter="all">All</li>
-                        <li data-filter="1">Web Design</li>
-                        <li data-filter="2">Graphic Design</li>
-                        <li data-filter="3">Branding</li>
+                        {% for category in profile.get_project_categories %}
+                            <li data-filter="{{category.id}}">{{ category }}</li>
+                        {% endfor %}
                     </ul>
                 </div>
                 <div class="portfolio-content">
                     <div id="filtr-container" class="row">
-                        <div class="col-md-4 col-sm-6 filtr-item" data-category="1" data-sort="value">
+                        {% for project in profile.projects.all %}
+                        <div class="col-md-4 col-sm-6 filtr-item" data-category="{{ project.category.id }}" data-sort="value">
                             <div class="item">
-                                <img class="img-responsive" src="images/portfolio/item-1.jpg" alt="">
+                                <img class="img-responsive" src="{{ project.image.url }}" alt="">
                                 <div class="overlay">
-                                    <a class="icon-img" href="images/portfolio/item-1.jpg"><i class="fa fa-search-plus"></i></a>
-                                    <h4 class="item-title">Project Title</h4>
+                                    <a class="icon-img" href="{{ project.image.url }}"><i class="fa fa-search-plus"></i></a>
+                                    <h4 class="item-title">{{ project.title }}</h4>
                                     <div class="item-category">
-                                        <span>Web Design</span>
+                                        <span>{{ project.category }}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6 filtr-item" data-category="2" data-sort="value">
-                            <div class="item">
-                                <img class="img-responsive" src="images/portfolio/item-2.jpg" alt="">
-                                <div class="overlay">
-                                    <a class="icon-img" href="images/portfolio/item-2.jpg"><i class="fa fa-search-plus"></i></a>
-                                    <h4 class="item-title">Project Title</h4>
-                                    <div class="item-category">
-                                        <span>Graphic Design</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 filtr-item" data-category="3" data-sort="value">
-                            <div class="item">
-                                <img class="img-responsive" src="images/portfolio/item-3.jpg" alt="">
-                                <div class="overlay">
-                                    <a class="icon-img" href="images/portfolio/item-3.jpg"><i class="fa fa-search-plus"></i></a>
-                                    <h4 class="item-title">Project Title</h4>
-                                    <div class="item-category">
-                                        <span>Branding</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 filtr-item" data-category="1" data-sort="value">
-                            <div class="item">
-                                <img class="img-responsive" src="images/portfolio/item-4.jpg" alt="">
-                                <div class="overlay">
-                                    <a class="icon-img" href="images/portfolio/item-4.jpg"><i class="fa fa-search-plus"></i></a>
-                                    <h4 class="item-title">Project Title</h4>
-                                    <div class="item-category">
-                                        <span>Web Design</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 filtr-item" data-category="2" data-sort="value">
-                            <div class="item">
-                                <img class="img-responsive" src="images/portfolio/item-5.jpg" alt="">
-                                <div class="overlay">
-                                    <a class="icon-img" href="images/portfolio/item-5.jpg"><i class="fa fa-search-plus"></i></a>
-                                    <h4 class="item-title">Project Title</h4>
-                                    <div class="item-category">
-                                        <span>Graphic Design</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 filtr-item" data-category="3" data-sort="value">
-                            <div class="item">
-                                <img class="img-responsive" src="images/portfolio/item-6.jpg" alt="">
-                                <div class="overlay">
-                                    <a class="icon-img" href="images/portfolio/item-6.jpg"><i class="fa fa-search-plus"></i></a>
-                                    <h4 class="item-title">Project Title</h4>
-                                    <div class="item-category">
-                                        <span>Branding</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -496,7 +463,7 @@
         
         <!-- ========== Start Testimonials ========== -->
         
-        <section id="testimonials" class="testimonials">
+        <!-- <section id="testimonials" class="testimonials">
             <div class="container">
                 <div class="main-title">
                     <h2>Testimonials</h2>
@@ -504,7 +471,6 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12 owl-carousel owl-theme">
-                        <!-- New Item -->
                         <div class="testimonial-box">
                             <div class="description">
                                 <span class="quote-left"><i class="fa fa-quote-left"></i></span>
@@ -519,7 +485,6 @@
                                 <span>Web Developer</span>
                             </div>
                         </div>
-                        <!-- New Item -->
                         <div class="testimonial-box">
                              <div class="description">
                                 <span class="quote-left"><i class="fa fa-quote-left"></i></span>
@@ -534,7 +499,6 @@
                                 <span>SEO Manager</span>
                             </div>
                         </div>
-                        <!-- New Item -->
                         <div class="testimonial-box">
                             <div class="description">
                                 <span class="quote-left"><i class="fa fa-quote-left"></i></span>
@@ -549,7 +513,6 @@
                                 <span>Graphic Designer</span>
                             </div>
                         </div>
-                        <!-- New Item -->
                         <div class="testimonial-box">
                             <div class="description">
                                 <span class="quote-left"><i class="fa fa-quote-left"></i></span>
@@ -567,7 +530,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
         
         <!-- ========== End Testimonials ========== -->
         

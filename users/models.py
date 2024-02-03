@@ -74,6 +74,9 @@ class UserProfile(models.Model):
     
     def personal_skills(self):
         return self.skills.all().filter(type='Personal')
+    
+    def get_project_categories(self):
+        return {project.category for project in self.projects.all()}
 
 
 class Skill(models.Model):
@@ -95,13 +98,21 @@ class Title(models.Model):
         return self.name
 
 
-class Brag:
-    brag_names = (
-        _k('Students Taught'),
-        _k('Designs Made'),
-        _k('Projects Done'),
-        _k('Happy Clients'),
-        _k('Companies worked in'),
-        _k('Startups worked in'),
-    )
-    name = models.CharField(max_length=255, choices=brag_names)
+
+class Project(models.Model):
+    owners = models.ManyToManyField(UserProfile, related_name='projects', help_text="people involved in this project.")
+    title = models.CharField(max_length=255, help_text='name your projects')
+    link = models.URLField(blank=True)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, help_text='eg. Web design, Graphics Design, Blockchain, Games')
+    image = models.ImageField(upload_to='project_images', help_text="Image to display project")
+    description = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
