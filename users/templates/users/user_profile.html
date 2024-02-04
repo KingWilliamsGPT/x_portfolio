@@ -123,8 +123,8 @@
             @media (max-width: 767px){
 
             }
-            
-                        
+
+
             @media (min-width: 1200px){
                 #profile_photo{
                     width: 220px;
@@ -197,6 +197,24 @@
         
         <!-- ========== End Navbar ========== -->
         
+
+        <!-- Modal -->
+        <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                ...
+                </div>
+            </div>
+            </div>
+        </div> -->
+
         <!-- ========== Start Home ========== -->
         
         <section class="home" id="home">
@@ -206,13 +224,13 @@
                         <div class="display-table-cell">
                             <div>
                                 <!-- <img src="{# profile.profile_photo.url #}" alt="" id="profile_photo"> -->
-                                <span style="background-image: url('{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'default_pic/cool-hair.webp' %}{% endif %}'); background-size: cover;background-position: center;" alt="" id="profile_photo" title="expert material"></span>
+                                <span style="background-image: url('{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'default_pic/cool-hair.webp' %}{% endif %}'); background-size: cover;background-position: center; cursor: pointer;" alt="" id="profile_photo" title="expert material" data-toggle="modal" data-target="#exampleModalCenter"></span>
                             </div>
                             <h3 style="margin-top: 3rem;">Hey, My name is</h3>
                             <h1>{{profile.user.get_full_name}}</h1>
                             <p>I'm an expert <span></span></p>
                             <div class="my-btn">
-                                <a href="#" class="main-btn">Open For Hire</a>
+                                <a href="#" class="main-btn" data-toggle="modal" data-target="#exampleModalCenter">Open For Hire</a>
                             </div>
                             <div class="social-links">
                                 <!-- <a href="#" class="main-btn">Hire Me</a> -->
