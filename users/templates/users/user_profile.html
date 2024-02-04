@@ -90,6 +90,48 @@
                 display: inline-block!important;
             }
             
+
+            #profile_photo:hover:before {
+                transform: scale(1.1); /* Scale on hover for a slight growth effect */
+            }
+
+            @keyframes heartbeat {
+                0%, 100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.2);
+                }
+            }
+
+
+            #profile_photo.heartbeat-animation:before {
+                animation: heartbeat 1s infinite; /* Apply heartbeat animation */
+            }
+
+            #home{
+                top: -20px;
+            }
+
+            .modal-dialog-centered {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                justify-content: center;
+                min-height: calc(100% - (.5rem * 2));
+            }
+
+            @media (max-width: 767px){
+
+                #home{
+                    top: 0px;
+                }
+            }
+
+
             @media (min-width: 1200px){
                 #profile_photo{
                     width: 220px;
@@ -119,6 +161,15 @@
             </div>
         </div>
 
+        <audio id="clickSound">
+            <source src="{% static 'assets/sound/click-sound.aac' %}" type="audio/aac">
+        </audio>
+        <audio id="heartBeatSound" loop>
+            <source src="{% static 'assets/sound/heart-beat.mp3' %}" type="audio/mp3">
+        </audio>
+
+
+
         <!-- ========== End Loading ========== -->
         
         <!-- ========== Start Navbar ========== -->
@@ -133,14 +184,18 @@
                         <span class="bar"></span>
                     </button>
                     <!-- logo -->
-                    <a class="navbar-brand" href="#"><img src="{% static 'logo/x-logo-bg-croped.png' %}" alt="" style="width:3rem"></a>
+                    <a class="navbar-brand d-inline-block" href="#"><img src="{% static 'logo/x-logo-bg-croped.png' %}" alt="" style="width:3rem; display: inline-block" class="mr-3"><span style="
+                        display: inline-block;
+                        margin-left: 12px;
+                        color: #eef1f6;
+                    ">Xalms</span></a>
                 </div>
                 <!-- Collect the nav links, and other content for toggling -->
                 <div class="navbar-links" id="ournavbar">
                     <!-- links -->
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-brand text-center visible-xs-block"><a href="#"><span>A</span>nwar</a></li>
-                        <li><a class="active" href="#" data-value="#home" data-name="Home">Home</a></li>
+                        <li class="nav-brand text-center visible-xs-block"><a href="#"><img src="{% static 'logo/x-logo-bg-croped.png' %}" alt="" style="width:6rem;" class=""></li>
+                        <li><a class="active" href="#" data-value="#home" data-name="Home" id="home">Home</a></li>
                         <li><a href="#" data-value="#about" data-name="About">About</a></li>
                         <li><a href="#" data-value="#skills" data-name="Skills">Skills</a></li>
                         <!-- <li><a href="#" data-value="#services" data-name="Services">Services</a></li>
@@ -155,6 +210,27 @@
         
         <!-- ========== End Navbar ========== -->
         
+            <!-- Button trigger modal -->
+
+            
+            <!-- Modal -->
+            <!-- <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                    ...
+                    </div>
+                </div>
+                </div>
+            </div> -->
+
+
         <!-- ========== Start Home ========== -->
         
         <section class="home" id="home">
@@ -164,13 +240,13 @@
                         <div class="display-table-cell">
                             <div>
                                 <!-- <img src="{# profile.profile_photo.url #}" alt="" id="profile_photo"> -->
-                                <span style="background-image: url('{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'default_pic/cool-hair.webp' %}{% endif %}'); background-size: cover;background-position: center;" alt="" id="profile_photo" title="expert material"></span>
+                                <span style="background-image: url('{% if profile.profile_photo %}{{ profile.profile_photo.url }}{% else %}{% static 'default_pic/cool-hair.webp' %}{% endif %}'); background-size: cover;background-position: center; cursor: pointer;" alt="" id="profile_photo" title="expert material" data-toggle="modal" data-target="#exampleModalCenter"></span>
                             </div>
                             <h3 style="margin-top: 3rem;">Hey, My name is</h3>
                             <h1>{{profile.user.get_full_name}}</h1>
                             <p>I'm an expert <span></span></p>
                             <div class="my-btn">
-                                <a href="#" class="main-btn">Open For Hire</a>
+                                <a href="#" class="main-btn " data-toggle="modal" data-target="#exampleModalCenter">Open For Hire</a>
                             </div>
                             <div class="social-links">
                                 <!-- <a href="#" class="main-btn">Hire Me</a> -->
@@ -799,6 +875,25 @@
         <script src="{% static 'assets/js/wow.min.js' %}"></script>
         <!-- Custom Js -->
         <script src="{% url 'users:custom_js' pk=profile.id %}"></script>
+
+
+        <script>
+
+            $(document).ready(()=>{
+                $(document).on('click', ()=> $('#clickSound')[0].play());
+                $('#profile_photo').on({
+                    mouseenter: () => {
+                        $('#profile_photo').addClass('heartbeat-animation');
+                        $('#heartBeatSound')[0].play();
+                    },
+                    mouseleave: () => {
+                        $('#profile_photo').removeClass('heartbeat-animation');
+                        $('#heartBeatSound')[0].pause();
+                        $('#heartBeatSound')[0].currentTime = 0;
+            }
+        });
+            });
+        </script>
     </body>
 
 <!-- Mirrored from anwar.hasnaanajmi.co/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 26 Jan 2024 09:56:16 GMT -->
